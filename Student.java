@@ -1,28 +1,58 @@
+package com.training;
 
- 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
- public class Student {
- public static void main (String[] args) {
-	 ArrayList<String> a1=new ArrayList<String>();
- int n;
- Scanner sc= new Scanner(System.in);
- System.out.println("enter the number of students:");
- n=sc.nextInt();
- System.out.println("enter the student names:");
-for(int i=0;i<n;i++)
+public class Student
 {
-	a1.add(sc.next());
+     int roll,age;
+     String name,course;
+     Student()
+     {
+          roll=0;
+          name=null;
+          age=0;
+          course=null;
+     }
+     Student(int r,String n,int a,String c) throws Exception
+     {
+          roll=r;
+          course=c;
+          int l,temp=0;
+          l = n.length();
+          for(int i=0;i<l;i++)
+          {
+               char ch;
+               ch=n.charAt(i);
+               if(ch<'A' || ch>'Z' && ch<'a' || ch>'z')
+                    temp=1;
+          }
+          /*———-Checking Name——————–*/
+          try
+          {
+               if(temp==1)
+                    throw new Exception();
+               else
+                    name=n;
+          }
+          catch(NameNotValidException e2)
+          {
+               System.out.println(e2);
+          }
+          /*———-Checking Age——————–*/
+          try
+          {
+               if(a>=15 && a<=21)
+                    age=a;
+               else
+                    throw new Exception();
+          }
+          catch(AgeNotWithInRangeException e1)
+          {
+               System.out.println(e1);
+          }
+     }
+     void display()
+     {
+          System.out.println("roll Name Age Course");
+          System.out.println("---------------------");
+          System.out.println(roll+" "+name+" "+age+" " +course);
+     }
 }
-System.out.println("student list:");
-for(String a:a1)
-{
-		System.out.println("enter the name of the student to be searched:");
-	    String st=sc.next(); 
-	    int position=Collections.binarySearch(a1,st);
-		System.out.println("posistion of"+st+"is:"+position);
-		
-		}
- }
- }
