@@ -1,92 +1,48 @@
-package com.training;
+import java.util.Scanner;
 
-class ThreadA extends Thread{
-    public void run( ) {
-       for(int i = 1; i <= 5; i++) {
-          System.out.println("From Thread A with i = "+ -1*i);
-       }
-       System.out.println("Exiting from Thread A ...");
-    }
-}
-
-class ThreadB extends Thread {
-   public void run( ) {
-      for(int j = 1; j <= 5; j++) {
-        System.out.println("From Thread B with j= "+2* j);
-      }
-      System.out.println("Exiting from Thread B ...");  
-	}
-}
-
-public class Demo {
-   public static void main(String args[]) {
-        ThreadA a = new ThreadA();
-        ThreadB b = new ThreadB();
-      
-        a.start();
-        b.start();
-        System.out.println("... Multithreading is over ");
-   }
-}
-
-class Account {
-	public int balance;
-	public int accountNo;
-	void displayBalance() {
-		System.out.println("Account No:" + accountNo + "Balance: " + balance);
-	}
-
-	   synchronized void deposit(int amount){
-			balance = balance + amount;
-			System.out.println( amount + " is deposited");
-			displayBalance();
-	   }
-
-	   synchronized void withdraw(int amount){
-			  balance = balance - amount;
-			  System.out.println( amount + " is withdrawn");
-			  displayBalance();
-	   }
-}
-
-class TransactionDeposit implements Runnable{
-	int amount;
-	Account accountX;
-	TransactionDeposit(Account x, int amount){
-		accountX = x;
-		this.amount = amount;
-		new Thread(this).start();
-	}
+class Demo
+{
 	
-	public void run(){
-		accountX.deposit(amount);
+	public static boolean isInterleaving(String X, String Y, String Z)
+	{
+		
+		if (X.length() == 0 && Y.length() == 0 && Z.length() == 0) {
+			return true;
+		}
+
+		if (Z.length() == 0) {
+			return false;
+		}
+
+
+		boolean x = (X.length() != 0 && Z.charAt(0) == X.charAt(0)) &&
+				isInterleaving(X.substring(1), Y, Z.substring(1));
+
+
+		boolean y = (Y.length() != 0 && Z.charAt(0) == Y.charAt(0)) &&
+				isInterleaving(X, Y.substring(1), Z.substring(1));
+
+		return x || y;
+	}
+
+	public static void main(String[] args)
+	{
+		
+		
+		Scanner S=new Scanner(System.in);
+		System.out.println("Enter The First String :");
+		String X=S.nextLine();
+		System.out.println("Enter The Second String :");
+		String Y=S.nextLine();
+		System.out.println("Enter The Third String :");
+		String Z=S.nextLine();		
+		
+
+		if (isInterleaving(X, Y, Z)) {
+			System.out.print("Interleaving");
+		}
+		else {
+			System.out.print("Given string is not interleaving of X and Y");
+		}
 	}
 }
-
-class TransactionWithdraw implements Runnable{
-	int amount;
-	Account accountY;
-	
-	TransactionWithdraw(Account y, int amount) {
-		accountY = y;
-		this.amount = amount;
-		new Thread(this).start();
-	}
-	
-	public void run(){
-		accountY.withdraw(amount);
-	}
-}
-
-class Demo1{
-	public static void main(String args[]) {
-		Account ABC = new Account();
-		ABC.balance = 1000;
-		ABC.accountNo = 111;
-		TransactionDeposit t1;
-		TransactionWithdraw t2;
-		t1 = new TransactionDeposit(ABC, 500);
-		t2 = new TransactionWithdraw(ABC,900);
-	}
-}
-
